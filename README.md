@@ -20,7 +20,7 @@ The information within the pop up should at minimum display the date/time, venue
 - GitHub Projects - Manage project tasks. 
 - FigJam -  Designing the page layout. As well as designing the flowchart the displays project structure for Frontend and Backend Development.
 
-Additional features after MVP
+## Additional features after MVP
 
 - Automatic Location-Based Search - Upon loading, the application will automatically detect the user’s location and display relevant local events.
 - User Login & Save Events - The ability for users to login and save events they plan to attend.
