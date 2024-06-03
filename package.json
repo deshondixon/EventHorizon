@@ -1,0 +1,17 @@
+{
+  "name": "eventhorizonbackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js --ignore client",
+    "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
+    "install": "cd server && npm install && cd.. && cd client && npm install",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "DeShon Dixon",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
