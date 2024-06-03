@@ -3,7 +3,7 @@ import './App.css';
 function App() {
   return (
     <>
-      <div>Event Horizon</div>
+      <div>EventHorizon</div>
     </>
   );
 }
