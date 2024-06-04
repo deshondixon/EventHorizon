@@ -1,7 +1,7 @@
 export default function Map() {
   return (
     <>
-      <div className='Map'></div>
+      <div className='Map'>Map</div>
     </>
   );
 }
