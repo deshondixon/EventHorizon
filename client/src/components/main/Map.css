@@ -1,0 +1,31 @@
+/* .cluster-marker {
+  color: #fff;
+  background: #1978c8;
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.festival-marker {
+  background: none;
+  border: none;
+}
+
+.festival-marker img {
+  width: 25px;
+} */
+
+.marker-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+.marker-icon {
+  width: 25px;
+  height: 25px;
+}

@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 router.get('/api', async (req, res) => {
-  const url = `https://api.predicthq.com/v1/events`;
+  const url = `https://api.predicthq.com/v1/events/?limit=50`;
 
   try {
     const response = await fetch(url, {
@@ -21,7 +21,7 @@ router.get('/api', async (req, res) => {
     }
 
     const data = await response.json();
-    console.log(`This Api Data: ${JSON.stringify(data)}`);
+    // console.log(`This Api Data: ${JSON.stringify(data)}`);
 
     return res.status(200).json(data);
   } catch (error) {
