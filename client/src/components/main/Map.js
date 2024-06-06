@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import ReactMapGL, { Marker, Popup } from 'react-map-gl';
-import useSwr from 'swr';
+import React, { useState } from 'react';
+import ReactMapGL, { Marker, Popup, FlyToInterpolator } from 'react-map-gl';
+import useSWR from 'swr';
 import './Map.css';
+import axios from 'axios';
 
-const fetcher = (...args) => fetch(...args).then((response) => response.json());
+const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 export default function Map() {
   const TOKEN = process.env.REACT_APP_TOKEN;
@@ -13,127 +14,120 @@ export default function Map() {
     width: '100vw',
     height: '100vh',
     zoom: 3,
-    transitionDuration: 5000,
+    transitionInterpolator: new FlyToInterpolator(),
+    transitionDuration: 1700,
   });
 
-  const url = 'http://localhost:3001/api';
-  const { data, error } = useSwr(url, fetcher);
-  console.log('THIS IS ORIGINAL DATA:', data);
+  const { data, error } = useSWR('http://localhost:3001/api', fetcher);
 
-  const venues =
-    data && !error
-      ? data.results.flatMap((festival) =>
-          festival.results ? [festival, ...festival.results] : festival
-        )
-      : [];
+  if (error) {
+    console.error('Error fetching data:', error);
+  }
 
-  const [selectedFestival, setSelectedFestival] = useState(null);
+  const events = data?.results || [];
 
-  const [initialZoom, setInitialZoom] = useState(3);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
-  const handleMarkerClick = (venue) => {
-    setSelectedFestival(venue);
+  const handleMarkerClick = (event) => {
+    setSelectedEvent(event);
     setViewPort({
       ...viewPort,
-      latitude: venue.location[1],
-      longitude: venue.location[0],
+      latitude: event.location[1],
+      longitude: event.location[0],
       zoom: 12,
     });
   };
 
-  useEffect(() => {
-    setViewPort((prevViewport) => ({
-      ...prevViewport,
-      transitionDuration: 1000,
-    }));
-  }, [viewPort]);
+  const handleGeocoderSearch = async (searchText) => {
+    try {
+      const response = await axios.get(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          searchText
+        )}.json?access_token=${TOKEN}`
+      );
+      const result = response.data.features[0];
+      if (result) {
+        setViewPort({
+          ...viewPort,
+          latitude: result.center[1],
+          longitude: result.center[0],
+          zoom: 12,
+        });
+      }
+    } catch (error) {
+      console.error('Error searching location:', error);
+    }
+  };
 
   return (
-    <>
-      <div style={{ width: '100vw', height: '100vh' }}>
-        <ReactMapGL
-          {...viewPort}
-          maxZoom={20}
-          mapboxApiAccessToken={TOKEN}
-          mapStyle='mapbox://styles/deshondixon/clx0l2ujj005101p1aq97gr3e'
-          onViewportChange={(viewPort) => {
-            setViewPort(viewPort);
+    <ReactMapGL
+      {...viewPort}
+      maxZoom={20}
+      mapboxApiAccessToken={TOKEN}
+      mapStyle='mapbox://styles/deshondixon/clx0l2ujj005101p1aq97gr3e'
+      onViewportChange={setViewPort}
+    >
+      {/* <NavigationControl position='top-left' /> */}
+
+      {events.map((e) => (
+        <Marker key={e.id} latitude={e.location[1]} longitude={e.location[0]}>
+          <button
+            className='marker-button'
+            onClick={() => handleMarkerClick(e)}
+          >
+            <img className='marker-icon' src='pin.svg' alt='This is a marker' />
+          </button>
+        </Marker>
+      ))}
+
+      {selectedEvent && (
+        <Popup
+          latitude={selectedEvent.location[1]}
+          longitude={selectedEvent.location[0]}
+          onClose={() => {
+            setSelectedEvent(null);
+            setViewPort((prev) => ({ ...prev, zoom: 3 }));
           }}
         >
-          {venues.map((venue) => {
-            const latitude = venue.location[1];
-            const longitude = venue.location[0];
-            return (
-              <Marker
-                key={venue.relevance}
-                latitude={latitude}
-                longitude={longitude}
-              >
-                <button
-                  className='marker-button'
-                  onClick={() => handleMarkerClick(venue)}
-                >
-                  <img
-                    className='marker-icon'
-                    src='pin.svg'
-                    alt='This is a marker'
-                  />
-                </button>
-              </Marker>
-            );
-          })}
+          <div>
+            <h2>{selectedEvent.title}</h2>
+            <p>{selectedEvent.description}</p>
+            <div>
+              {selectedEvent.entities.map((entity) => (
+                <div key={entity.entity_id}>
+                  <h4>{entity.name}</h4>
+                  <p>Address: {entity.formatted_address}</p>
+                </div>
+              ))}
+            </div>
+            <div>
+              <h2>Dates</h2>
+              {selectedEvent.impact_patterns
+                ?.flatMap((impactPattern) =>
+                  impactPattern?.impacts?.map((impact) => impact.date_local)
+                )
+                ?.filter((date, index, self) => self.indexOf(date) === index)
+                ?.map((date, dateIndex) => {
+                  const dateObject = new Date(date);
+                  const formattedDate = dateObject.toLocaleDateString('en-US', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                  });
+                  return <p key={dateIndex}>{formattedDate}</p>;
+                })}
+            </div>
+          </div>
+        </Popup>
+      )}
 
-          {selectedFestival ? (
-            <Popup
-              latitude={selectedFestival.location[1]}
-              longitude={selectedFestival.location[0]}
-              onClose={() => {
-                setSelectedFestival(null);
-                setViewPort({ ...viewPort, zoom: initialZoom });
-              }}
-            >
-              <div>
-                <h2>{selectedFestival.title}</h2>
-                <div>
-                  <p>{selectedFestival.description}</p>
-                </div>
-                <div>
-                  <div>
-                    {selectedFestival.entities.map((entity) => (
-                      <div key={entity.entity_id}>
-                        <h4>{entity.name}</h4>
-                        <p>Address: {entity.formatted_address}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div>
-                    <h2>Dates</h2>
-                    {selectedFestival.impact_patterns
-                      .flatMap((impactPattern) =>
-                        impactPattern.impacts.map((impact) => impact.date_local)
-                      )
-                      .filter(
-                        (date, index, self) => self.indexOf(date) === index
-                      )
-                      .map((date, dateIndex) => {
-                        const dateObject = new Date(date);
-                        const formattedDate = dateObject.toLocaleDateString(
-                          'en-US',
-                          {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                          }
-                        );
-                        return <p key={dateIndex}>{formattedDate}</p>;
-                      })}
-                  </div>
-                </div>
-              </div>
-            </Popup>
-          ) : null}
-        </ReactMapGL>
+      <div className='geocoder-container'>
+        <input
+          type='text'
+          placeholder='Search'
+          onChange={(e) => handleGeocoderSearch(e.target.value)}
+        />
       </div>
-    </>
+    </ReactMapGL>
   );
 }
