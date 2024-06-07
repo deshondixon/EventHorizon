@@ -85,49 +85,46 @@ export default function Map() {
             onClose={() => {
               setSelectedEvent(null);
             }}
+            closeButton={true}
+            closeOnClick={false}
+            anchor='top'
+            className='custom-popup'
           >
-            <div className='card' style={{ width: '18rem' }}>
-              <div className='card-body'>
-                <h5 className='card-title'>{selectedEvent.title}</h5>
-                <p className='card-text'>{selectedEvent.description}</p>
-                <div>
-                  {selectedEvent.entities.map((entity) => (
-                    <div key={entity.entity_id}>
-                      <h6 className='mb-2 card-subtitle text-muted'>
-                        {entity.name}
-                      </h6>
-                      <p className='card-text'>
-                        Address: {entity.formatted_address}
+            <div className='popup-content'>
+              <h5 className='popup-title'>{selectedEvent.title}</h5>
+              <p className='popup-description'>{selectedEvent.description}</p>
+              <div>
+                {selectedEvent.entities.map((entity) => (
+                  <div key={entity.entity_id}>
+                    <h6> Address</h6>
+                    <h6 className='popup-entity-title'>{entity.name}</h6>
+                    <p className='popup-address'>{entity.formatted_address}</p>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <h6 className='popup-dates-title'>Dates</h6>
+                {selectedEvent.impact_patterns
+                  ?.flatMap((impactPattern) =>
+                    impactPattern?.impacts?.map((impact) => impact.date_local)
+                  )
+                  ?.filter((date, index, self) => self.indexOf(date) === index)
+                  ?.map((date, dateIndex) => {
+                    const dateObject = new Date(date);
+                    const formattedDate = dateObject.toLocaleDateString(
+                      'en-US',
+                      {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                      }
+                    );
+                    return (
+                      <p key={dateIndex} className='popup-date'>
+                        {formattedDate}
                       </p>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <h6>Dates</h6>
-                  {selectedEvent.impact_patterns
-                    ?.flatMap((impactPattern) =>
-                      impactPattern?.impacts?.map((impact) => impact.date_local)
-                    )
-                    ?.filter(
-                      (date, index, self) => self.indexOf(date) === index
-                    )
-                    ?.map((date, dateIndex) => {
-                      const dateObject = new Date(date);
-                      const formattedDate = dateObject.toLocaleDateString(
-                        'en-US',
-                        {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                        }
-                      );
-                      return (
-                        <p key={dateIndex} className='card-text'>
-                          {formattedDate}
-                        </p>
-                      );
-                    })}
-                </div>
+                    );
+                  })}
               </div>
             </div>
           </Popup>
