@@ -26,7 +26,10 @@ export default function Map() {
     attributionControl: false,
   });
 
-  const { data, error } = useSWR('http://localhost:3001/api', fetcher);
+  const { data, error } = useSWR(
+    'https://heroku-event-horizon-app-b15e4591d5a2.herokuapp.com/api',
+    fetcher
+  );
 
   if (error) {
     console.error('Error fetching data:', error);
