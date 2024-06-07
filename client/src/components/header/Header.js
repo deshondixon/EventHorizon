@@ -1,15 +1,13 @@
 import React from 'react';
+import './Header.css';
 
 export default function Header() {
   return (
-    <header>
-      <nav className='navbar navbar-dark '>
-        <div className='container-fluid'>
-          <a className='navbar-brand' href='/'>
-            Event Horizon
-          </a>
-        </div>
-      </nav>
-    </header>
+    <div className='header-container'>
+      <label className='header-label'>
+        <img className='star-icon' src='star.svg' alt='This is a star' />
+        <h1 className='header-title'>EVENT HORIZON</h1>
+      </label>
+    </div>
   );
 }

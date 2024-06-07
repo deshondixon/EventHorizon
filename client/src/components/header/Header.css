@@ -1,0 +1,33 @@
+.header-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  font-size: x-large;
+  color: rgb(219, 202, 46);
+}
+
+.header-label {
+  display: flex;
+  align-items: center;
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  padding: 5px;
+  border-radius: 3px;
+  border: none;
+  background-color: transparent;
+  opacity: 0.3;
+  text-shadow: 0 0 3px rgb(52, 52, 52), 0 0 10px rgb(21, 21, 21);
+}
+
+.star-icon {
+  width: 50px; 
+  height: 50px; 
+  margin-right: 8px; 
+}
+
+.header-title {
+  margin: 0; 
+}
