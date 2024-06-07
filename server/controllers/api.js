@@ -5,8 +5,7 @@ const axios = require('axios');
 dotenv.config();
 
 router.get('/api', async (req, res) => {
-  const url =
-    'https://api.predicthq.com/v1/events/?category=concerts%2Cfestivals&country=US&limit=5000&sort=title';
+  const url = process.env.API_URL;
 
   try {
     const response = await axios.get(url, {
