@@ -14,6 +14,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 export default function Map() {
+  const apiURL = process.env.REACT_APP_URL;
   const TOKEN = process.env.REACT_APP_TOKEN;
   const [viewPort, setViewPort] = useState({
     latitude: 30.2653595,
@@ -26,10 +27,7 @@ export default function Map() {
     attributionControl: false,
   });
 
-  const { data, error } = useSWR(
-    'https://heroku-event-horizon-app-b15e4591d5a2.herokuapp.com/api',
-    fetcher
-  );
+  const { data, error } = useSWR(apiURL, fetcher);
 
   if (error) {
     console.error('Error fetching data:', error);
