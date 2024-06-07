@@ -20,12 +20,47 @@
   color: rgb(89, 89, 89);
 }
 
-.card {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  overflow: hidden;
+
+.custom-popup .mapboxgl-popup-content {
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  font-family: "Arial, sans-serif";
+  color: #333;
 }
 
-.card-body {
-  padding: 1rem;
+.popup-content h5,
+.popup-content h6,
+.popup-content p {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  margin: 0;
+  padding: 5px 0;
+}
+
+.popup-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.popup-subtitle {
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+}
+
+.popup-description,
+.popup-address,
+.popup-date {
+  font-size: 12px;
+  color: #666;
+}
+
+.popup-entity-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #555;
 }
