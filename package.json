@@ -6,8 +6,12 @@
   "scripts": {
     "start": "node server/server.js --ignore client",
     "develop": "concurrently \"cd server && npm run watch\" \"cd client && npm start\"",
-    "install": "cd server && npm install && cd.. && cd client && npm install",
+    "install": "cd server && npm install && cd .. && cd client && npm install",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "20.10.0",
+    "npm": "10.8.1"
   },
   "author": "DeShon Dixon",
   "license": "MIT",
