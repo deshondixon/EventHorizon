@@ -1,0 +1,31 @@
+.marker-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+.marker-icon {
+  width: 25px;
+  height: 25px;
+}
+
+.navigation-container {
+  position: absolute;
+  bottom: 100px;
+  right: 50px;
+  z-index: 1;
+  font-size: x-large;
+  color: rgb(89, 89, 89);
+}
+
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-body {
+  padding: 1rem;
+}
