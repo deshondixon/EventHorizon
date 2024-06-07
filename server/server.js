@@ -13,6 +13,8 @@ app.use(
     allowedHeaders: ['Authorization', 'Content-Type'],
   })
 );
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.use(routes);
 
@@ -26,9 +28,6 @@ if (process.env.NODE_ENV === 'production') {
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
 
 // app.use(routes);
 
