@@ -3,12 +3,15 @@ const path = require('path');
 const cors = require('cors');
 const PORT = process.env.PORT || 3001;
 const routes = require('./controllers/api');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express();
 
 app.use(
   cors({
-    origin: 'https://heroku-event-horizon-app-b15e4591d5a2.herokuapp.com',
+    origin: process.env.CORS_ORIGIN,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Authorization', 'Content-Type'],
   })
